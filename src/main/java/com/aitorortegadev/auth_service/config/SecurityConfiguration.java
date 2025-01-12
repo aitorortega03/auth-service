@@ -30,7 +30,7 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  public SecurityFilterChain springSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+  public SecurityFilterChain customSpringSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity.csrf(AbstractHttpConfigurer::disable)
       .cors(Customizer.withDefaults())
       .authorizeHttpRequests(request -> request.requestMatchers("/v1/**", "v3/api-docs/**", "/swagger-ui/**")
