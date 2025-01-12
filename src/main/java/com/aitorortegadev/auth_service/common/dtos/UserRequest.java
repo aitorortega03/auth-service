@@ -10,6 +10,9 @@ import lombok.*;
 public class UserRequest {
 
     @NonNull
+    private String username;
+
+    @NonNull
     private String email;
 
     @NonNull
