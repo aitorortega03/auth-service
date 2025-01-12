@@ -2,7 +2,7 @@ package com.aitorortegadev.auth_service.service.impl;
 
 import com.aitorortegadev.auth_service.common.dtos.TokenResponse;
 import com.aitorortegadev.auth_service.common.dtos.UserRequest;
-import com.aitorortegadev.auth_service.common.mappers.UserMapper;
+import com.aitorortegadev.auth_service.common.entities.User;
 import com.aitorortegadev.auth_service.repository.UserRepository;
 import com.aitorortegadev.auth_service.service.AuthService;
 import com.aitorortegadev.auth_service.service.JwtService;
@@ -17,20 +17,26 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtService jwtService;
 
-    private final UserMapper userMapper;
-
-    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService, UserMapper userMapper) {
+    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
-        this.userMapper = userMapper;
     }
 
     @Override
     public TokenResponse createUser(UserRequest userRequest) {
         return Optional.of(userRequest)
-                .map(userMapper::toEntity)
+                .map(this::mapToEntity)
                 .map(userRepository::save)
                 .map(userCreated -> jwtService.generateToken(userCreated.getId()))
                 .orElseThrow(() -> new RuntimeException("Error creating user"));
+    }
+
+    private User mapToEntity(UserRequest userRequest) {
+        return User.builder()
+          .username(userRequest.getUsername())
+          .email(userRequest.getEmail())
+          .password(userRequest.getPassword())
+          .role("USER")
+          .build();
     }
 }
