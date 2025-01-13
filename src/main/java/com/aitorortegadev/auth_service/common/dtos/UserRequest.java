@@ -9,12 +9,12 @@ import lombok.*;
 @NoArgsConstructor
 public class UserRequest {
 
-    @NonNull
-    private String username;
+  @NonNull
+  private String username;
 
-    @NonNull
-    private String email;
+  @NonNull
+  private String email;
 
-    @NonNull
-    private String password;
+  @NonNull
+  private String password;
 }

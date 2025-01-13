@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(ApiPathConstants.V1_ROUTE + ApiPathConstants.AUTH_ROUTE)
 public interface AuthApi {
 
-    @PostMapping(ApiPathConstants.REGISTER_ROUTE)
-    ResponseEntity<TokenResponse> createUser(@RequestBody @Valid UserRequest userRequest);
+  @PostMapping(ApiPathConstants.REGISTER_ROUTE)
+  ResponseEntity<TokenResponse> createUser(@RequestBody @Valid UserRequest userRequest);
 }
