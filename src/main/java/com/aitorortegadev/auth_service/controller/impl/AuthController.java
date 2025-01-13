@@ -1,6 +1,7 @@
 package com.aitorortegadev.auth_service.controller.impl;
 
 import com.aitorortegadev.auth_service.common.dtos.TokenResponse;
+import com.aitorortegadev.auth_service.common.dtos.UserLoginRequest;
 import com.aitorortegadev.auth_service.common.dtos.UserRequest;
 import com.aitorortegadev.auth_service.controller.AuthApi;
 import com.aitorortegadev.auth_service.service.AuthService;
@@ -19,5 +20,10 @@ public class AuthController implements AuthApi {
   @Override
   public ResponseEntity<TokenResponse> createUser(UserRequest userRequest) {
     return ResponseEntity.ok(authService.createUser(userRequest));
+  }
+
+  @Override
+  public ResponseEntity<TokenResponse> login(UserLoginRequest userLoginRequest) {
+    return ResponseEntity.ok(authService.loginUser(userLoginRequest));
   }
 }

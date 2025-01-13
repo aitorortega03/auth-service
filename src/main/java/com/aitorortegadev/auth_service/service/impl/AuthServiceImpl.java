@@ -1,6 +1,7 @@
 package com.aitorortegadev.auth_service.service.impl;
 
 import com.aitorortegadev.auth_service.common.dtos.TokenResponse;
+import com.aitorortegadev.auth_service.common.dtos.UserLoginRequest;
 import com.aitorortegadev.auth_service.common.dtos.UserRequest;
 import com.aitorortegadev.auth_service.common.entities.User;
 import com.aitorortegadev.auth_service.repository.UserRepository;
@@ -34,6 +35,17 @@ public class AuthServiceImpl implements AuthService {
       .map(userCreated -> jwtService.generateToken(userCreated.getId()))
       .orElseThrow(() -> new RuntimeException("Error creating user"));
   }
+
+  @Override
+  public TokenResponse loginUser(UserLoginRequest userLoginRequest) {
+    return Optional.of(userLoginRequest.getUsername())
+      .map(userRepository::findByUsername)
+      .filter(Optional::isPresent)
+      .filter(user -> passwordEncoder.matches(userLoginRequest.getPassword(), user.get().getPassword()))
+      .map(user -> jwtService.generateToken(user.get().getId()))
+      .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+  }
+
 
   private User mapToEntity(UserRequest userRequest) {
     return User.builder()

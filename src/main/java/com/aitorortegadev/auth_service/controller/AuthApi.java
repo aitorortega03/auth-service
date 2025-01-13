@@ -1,6 +1,7 @@
 package com.aitorortegadev.auth_service.controller;
 
 import com.aitorortegadev.auth_service.common.dtos.TokenResponse;
+import com.aitorortegadev.auth_service.common.dtos.UserLoginRequest;
 import com.aitorortegadev.auth_service.common.dtos.UserRequest;
 import com.aitorortegadev.auth_service.constants.ApiPathConstants;
 import jakarta.validation.Valid;
@@ -14,4 +15,7 @@ public interface AuthApi {
 
   @PostMapping(ApiPathConstants.REGISTER_ROUTE)
   ResponseEntity<TokenResponse> createUser(@RequestBody @Valid UserRequest userRequest);
+
+  @PostMapping(ApiPathConstants.LOGIN_ROUTE)
+  ResponseEntity<TokenResponse> login(@RequestBody @Valid UserLoginRequest userLoginRequest);
 }
