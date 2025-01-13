@@ -6,6 +6,7 @@ import com.aitorortegadev.auth_service.common.entities.User;
 import com.aitorortegadev.auth_service.repository.UserRepository;
 import com.aitorortegadev.auth_service.service.AuthService;
 import com.aitorortegadev.auth_service.service.JwtService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,30 +14,33 @@ import java.util.Optional;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    private final JwtService jwtService;
+  private final JwtService jwtService;
 
-    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
-    }
+  private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public TokenResponse createUser(UserRequest userRequest) {
-        return Optional.of(userRequest)
-                .map(this::mapToEntity)
-                .map(userRepository::save)
-                .map(userCreated -> jwtService.generateToken(userCreated.getId()))
-                .orElseThrow(() -> new RuntimeException("Error creating user"));
-    }
+  public AuthServiceImpl(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
+    this.userRepository = userRepository;
+    this.jwtService = jwtService;
+    this.passwordEncoder = passwordEncoder;
+  }
 
-    private User mapToEntity(UserRequest userRequest) {
-        return User.builder()
-          .username(userRequest.getUsername())
-          .email(userRequest.getEmail())
-          .password(userRequest.getPassword())
-          .role("USER")
-          .build();
-    }
+  @Override
+  public TokenResponse createUser(UserRequest userRequest) {
+    return Optional.of(userRequest)
+      .map(this::mapToEntity)
+      .map(userRepository::save)
+      .map(userCreated -> jwtService.generateToken(userCreated.getId()))
+      .orElseThrow(() -> new RuntimeException("Error creating user"));
+  }
+
+  private User mapToEntity(UserRequest userRequest) {
+    return User.builder()
+      .username(userRequest.getUsername())
+      .email(userRequest.getEmail())
+      .password(passwordEncoder.encode(userRequest.getPassword()))
+      .role("USER")
+      .build();
+  }
 }
