@@ -39,10 +39,9 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public TokenResponse loginUser(UserLoginRequest userLoginRequest) {
     return Optional.of(userLoginRequest.getUsername())
-      .map(userRepository::findByUsername)
-      .filter(Optional::isPresent)
-      .filter(user -> passwordEncoder.matches(userLoginRequest.getPassword(), user.get().getPassword()))
-      .map(user -> jwtService.generateToken(user.get().getId()))
+      .flatMap(userRepository::findByUsername)
+      .filter(user -> passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword()))
+      .map(user -> jwtService.generateToken(user.getId()))
       .orElseThrow(() -> new RuntimeException("Invalid credentials"));
   }
 
